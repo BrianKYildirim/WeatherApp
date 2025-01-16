@@ -94,34 +94,35 @@ class WeatherApp(QWidget):
         except requests.exceptions.HTTPError as http_error:
             match response.status_code:
                 case 400:
-                    print("Bad request.\nPlease check your input.")
+                    self.display_error("Bad Request:\nPlease check your input.")
                 case 401:
-                    print("Unauthorized.\nInvalid API key.")
+                    self.display_error("Unauthorized:\nInvalid API key.")
                 case 403:
-                    print("Forbidden.\nAccess is denied.")
+                    self.display_error("Forbidden:\nAccess is denied.")
                 case 404:
-                    print("Not found.\nCity was not found.")
+                    self.display_error("Not Found:\nCity was not found.")
                 case 500:
-                    print("Internal Server Error.\nPlease try again later.")
+                    self.display_error("Internal Server Error:\nPlease try again later.")
                 case 502:
-                    print("Bad gateway.\nInvalid response from the server.")
+                    self.display_error("Bad Gateway:\nInvalid response from the server.")
                 case 503:
-                    print("Service unavailable.\nServer is down.")
+                    self.display_error("Service Unavailable:\nServer is down.")
                 case 504:
-                    print("Gateway timout.\nNo response from the server.")
+                    self.display_error("Gateway Timout:\nNo response from the server.")
                 case _:
-                    print(f"HTTP error occurred.\n{http_error}")
+                    self.display_error(f"HTTP error occurred.\n{http_error}")
         except requests.exceptions.ConnectionError:
-            print("Connection error.\nPlease check your internet connection.")
+            self.display_error("Connection Error:\nPlease check your internet connection.")
         except requests.exceptions.Timeout:
-            print("Timeout Error.\nThe request timed out.")
+            self.display_error("Timeout Error:\nThe request timed out.")
         except requests.exceptions.TooManyRedirects:
-            print("Too many redirects.\nCheck the URL.")
+            self.display_error("Too Many Redirects:\nCheck the URL.")
         except requests.exceptions.RequestException as req_error:
-            print(f"Request Error:\n{req_error}")
+            self.display_error(f"Request Error:\n{req_error}")
 
     def display_error(self, message):
-        pass
+        self.temperature_label.setStyleSheet("font-size: 20px;")
+        self.temperature_label.setText(message)
 
     def display_weather(self, data):
         print(data)
