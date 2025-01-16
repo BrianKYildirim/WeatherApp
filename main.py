@@ -1,7 +1,7 @@
 import sys
 import requests
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (QApplication, QWidget, QLabel,
+from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QComboBox,
                              QLineEdit, QPushButton, QVBoxLayout)
 
 
@@ -14,16 +14,23 @@ class WeatherApp(QWidget):
         self.temperature_label = QLabel(self)
         self.emoji_label = QLabel(self)
         self.description_label = QLabel(self)
+        self.combo_box = QComboBox(self)
         self.initUI()
 
     def initUI(self):
         self.setWindowTitle("Weather App")
+        self.combo_box.setEditable(True)
+        self.combo_box.addItem("Fahrenheit")
+        self.combo_box.addItem("Celsius")
+
+        self.combo_box.activated.connect(self.on_combo_box_activated)
 
         vbox = QVBoxLayout()
 
         vbox.addWidget(self.city_label)
         vbox.addWidget(self.city_input)
         vbox.addWidget(self.get_weather_button)
+        vbox.addWidget(self.combo_box)
         vbox.addWidget(self.temperature_label)
         vbox.addWidget(self.emoji_label)
         vbox.addWidget(self.description_label)
@@ -35,16 +42,20 @@ class WeatherApp(QWidget):
         self.temperature_label.setAlignment(Qt.AlignCenter)
         self.emoji_label.setAlignment(Qt.AlignCenter)
         self.description_label.setAlignment(Qt.AlignCenter)
+        line_edit = self.combo_box.lineEdit()
+        line_edit.setAlignment(Qt.AlignCenter)
+        line_edit.setReadOnly(True)
 
         self.city_label.setObjectName("city_label")
         self.city_input.setObjectName("city_input")
         self.get_weather_button.setObjectName("get_weather_button")
+        self.combo_box.setObjectName("combo_box")
         self.temperature_label.setObjectName("temperature_label")
         self.emoji_label.setObjectName("emoji_label")
         self.description_label.setObjectName("description_label")
 
         self.setStyleSheet("""
-            QLabel, QPushButton {
+            QLabel, QPushButton, QComboBox {
                 font-family: calibri;
             }
             
@@ -73,6 +84,10 @@ class WeatherApp(QWidget):
             
             QLabel#description_label {
                 font-size: 50px;
+            }
+            
+            QComboBox#combo_box {
+                font-size: 20px;
             }
         """)
 
@@ -120,6 +135,9 @@ class WeatherApp(QWidget):
         except requests.exceptions.RequestException as req_error:
             self.display_error(f"Request Error:\n{req_error}")
 
+    def on_combo_box_activated(self):
+        selected_text = self.combo_box.currentText()
+        return selected_text
     def display_error(self, message):
         self.temperature_label.setStyleSheet("font-size: 30px;")
         self.temperature_label.setText(message)
@@ -134,7 +152,9 @@ class WeatherApp(QWidget):
         weather_description = data["weather"][0]["description"]
         weather_id = data["weather"][0]["id"]
 
-        self.temperature_label.setText(f"{temperature_fahrenheit:.0f}°F")
+        units = self.on_combo_box_activated()
+
+        self.temperature_label.setText(f"{temperature_fahrenheit:.0f}°F" if units == "Fahrenheit" else f"{temperature_celsius:.0f}°C")
         self.emoji_label.setText(self.get_weather_emoji(weather_id))
         self.description_label.setText(f"{weather_description}")
 
