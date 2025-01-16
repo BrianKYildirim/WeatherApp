@@ -121,23 +121,47 @@ class WeatherApp(QWidget):
             self.display_error(f"Request Error:\n{req_error}")
 
     def display_error(self, message):
-        self.temperature_label.setStyleSheet("font-size: 20px;")
+        self.temperature_label.setStyleSheet("font-size: 30px;")
         self.temperature_label.setText(message)
+        self.emoji_label.clear()
+        self.description_label.clear()
 
     def display_weather(self, data):
         self.temperature_label.setStyleSheet("font-size: 75px;")
         temperature_kelvin = data["main"]["temp"]
         temperature_celsius = temperature_kelvin - 273.15
         temperature_fahrenheit = (temperature_celsius * 1.8) + 32
-        print(data)
         weather_description = data["weather"][0]["description"]
+        weather_id = data["weather"][0]["id"]
 
         self.temperature_label.setText(f"{temperature_fahrenheit:.0f}°F")
+        self.emoji_label.setText(self.get_weather_emoji(weather_id))
         self.description_label.setText(f"{weather_description}")
 
     @staticmethod
     def get_weather_emoji(weather_id):
-        pass
+        if 200 <= weather_id <= 232:
+            return "🌩️"
+        elif 300 <= weather_id <= 321:
+            return "🌥️"
+        elif 500 <= weather_id <= 531:
+            return "🌧️"
+        elif 600 <= weather_id <= 622:
+            return "❄️"
+        elif 701 <= weather_id <= 741:
+            return "🌫️"
+        elif weather_id == 762:
+            return "🌋"
+        elif weather_id == 771:
+            return "💨"
+        elif weather_id == 781:
+            return "🌪️"
+        elif weather_id == 800:
+            return "☀️"
+        elif 801 <= weather_id <= 804:
+            return "☁️"
+        else:
+            return ""
 
 
 if __name__ == '__main__':
