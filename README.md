@@ -24,7 +24,7 @@ Disclaimer: This application is intended for personal and educational use. Pleas
 - Set Up a Virtual Environment (Optional but Recommended):
   ```
   python -m venv venv
-  source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+  source venv/bin/activate  # On Windows, use `venv/Scripts/activate`
   ```
 - Install Dependencies:
   ```
