@@ -13,8 +13,7 @@ Disclaimer: This application is intended for personal and educational use. Pleas
 - Programming Language: Python 3.7 or higher
 - Libraries:
   - Requests for API communication
-  - Flask (if using the web interface)
-  - Additional libraries as specified in requirements.txt
+  - PyQt5
  
 **Installation:**
 - Clone the Repository:
